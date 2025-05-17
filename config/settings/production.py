@@ -3,7 +3,7 @@ import os
 from .base import *
 
 # Debug
-DEBUG = False
+DEBUG = True
 
 # Database
 DATABASES = {
