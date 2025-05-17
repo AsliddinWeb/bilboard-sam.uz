@@ -1,0 +1,208 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Главная | YTT SAIDOV SHERALI HOTAMOVICH</title>
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    .navbar-brand {
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .navbar-nav .nav-link {
+      color: white;
+      margin: 0 10px;
+      padding: 10px 15px;
+      border-radius: 0;
+      position: relative;
+    }
+    .navbar-nav .nav-link.active {
+      color: limegreen !important;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .footer {
+      background: linear-gradient(to right, #00cc00, #00e600);
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    #map {
+      width: 100%;
+      height: calc(100vh - 170px);
+      position: relative;
+    }
+    .map-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    body {
+      padding-bottom: 50px; /* Space for footer */
+    }
+    .login-btn {
+      background-color: #4cd964;
+      border-color: #4cd964;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    .login-btn i {
+      margin-right: 5px;
+    }
+    .filter-bar {
+      background-color: white;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .search-btn {
+      background-color: #4cd964;
+      border-color: #4cd964;
+      color: white;
+    }
+    .search-input {
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-black px-3">
+  <div class="container">
+    <a class="navbar-brand text-white" href="/">YTT "SAIDOV<br>SHERALI<br>HOTAMOVICH"</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Услуги</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">О нас</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Контакты</a>
+        </li>
+      </ul>
+      <div>
+        <a href="/admin" class="btn login-btn">
+          <i class="fas fa-sign-in-alt"></i> ВХОД
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Filter Bar -->
+<div class="container filter-bar">
+  <div class="row g-2">
+    <div class="col-md-2 col-6">
+      <select class="form-select">
+        <option selected>Локация</option>
+        {% for location in locations %}
+          <option value="{{ location }}">{{ location }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 col-6">
+      <select class="form-select">
+        <option selected>Область</option>
+        {% for region in regions %}
+          <option value="{{ region }}">{{ region }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 col-6">
+      <select class="form-select">
+        <option selected>Район</option>
+        {% for district in districts %}
+          <option value="{{ district }}">{{ district }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 col-6">
+      <select class="form-select">
+        <option selected>Статус</option>
+        {% for status in statuses %}
+          <option value="{{ status }}">{{ status }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4 col-12 d-flex">
+      <input type="text" class="form-control search-input me-2" placeholder="Номер точки">
+      <button class="btn search-btn">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Map -->
+<div class="map-container">
+  <div id="map">
+    {{ map|safe }}
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center">
+      <i class="fas fa-phone-alt me-2"></i> +998 97 920 20 21
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  // After the map loads, adjust its container size
+  document.addEventListener('DOMContentLoaded', function() {
+    // For Leaflet maps (used by Folium)
+    setTimeout(function() {
+      if (typeof L !== 'undefined') {
+        // Force map to recalculate its container size
+        var mapContainer = document.querySelector('.leaflet-container');
+        if (mapContainer && mapContainer._leaflet_id) {
+          mapContainer._leaflet_map.invalidateSize();
+        }
+      }
+    }, 300);
+  });
+  
+  // Initialize form filters with AJAX functionality
+  document.querySelectorAll('.form-select').forEach(select => {
+    select.addEventListener('change', function() {
+      // Here you would implement AJAX filtering based on selected values
+      console.log('Filter changed:', this.value);
+      // Example: fetch('/api/billboards?filter=' + this.value)...
+    });
+  });
+  
+  // Search button functionality
+  document.querySelector('.search-btn').addEventListener('click', function() {
+    const searchValue = document.querySelector('.search-input').value;
+    console.log('Searching for:', searchValue);
+    // Example: fetch('/api/billboards?search=' + searchValue)...
+  });
+</script>
+</body>
+</html>

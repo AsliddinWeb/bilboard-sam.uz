@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>О нас | YTT SAIDOV SHERALI HOTAMOVICH</title>
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    .navbar-brand {
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .navbar-nav .nav-link {
+      color: white;
+      margin: 0 10px;
+      padding: 10px 15px;
+      border-radius: 0;
+      position: relative;
+    }
+    .navbar-nav .nav-link.active {
+      color: limegreen !important;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .footer {
+      background: linear-gradient(to right, #00cc00, #00e600);
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    body {
+      padding-bottom: 50px; /* Space for footer */
+    }
+    .login-btn {
+      background-color: #4cd964;
+      border-color: #4cd964;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    .login-btn i {
+      margin-right: 5px;
+    }
+    .highlight-label {
+      background: #4cd964;
+      color: white;
+      font-weight: bold;
+      padding: 6px 15px;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 20px 0;
+    }
+    .content-section {
+      padding: 30px 15px;
+      margin-bottom: 60px; /* Extra margin at bottom to prevent content being hidden by footer */
+    }
+    .content-section p {
+      margin-bottom: 15px;
+    }
+    .content-section strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-black px-3">
+  <div class="container">
+    <a class="navbar-brand text-white" href="/">YTT "SAIDOV<br>SHERALI<br>HOTAMOVICH"</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav me-3">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Главная</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Услуги</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/about">О нас</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Контакты</a>
+        </li>
+      </ul>
+      <div>
+        <a href="/admin" class="btn login-btn">
+          <i class="fas fa-sign-in-alt"></i> ВХОД
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Content -->
+<div class="container content-section">
+  <span class="highlight-label">Специализация на наружной рекламе</span>
+
+  <div class="row">
+    <div class="col-md-6">
+      <p><strong>Наша миссия:</strong><br>
+        Украшать бренды и окружающую<br>
+        среду с помощью Биллбордов</p>
+
+      <p><strong>Значение наружной рекламы</strong><br>
+        Важность привлечения внимания аудитории<br>
+        на местах с высоким трафиком</p>
+
+      <p><strong>Преимущества Биллбордов в наружной рекламе:</strong><br>
+        Высокая видимость и долгосрочность</p>
+
+      <p><strong>Наши услуги:</strong><br>
+        Создание контента: привлекательные<br>
+        визуальные изображения с вызывающим текстом</p>
+
+      <p><strong>Обслуживание и поддержка:</strong><br>
+        Обеспечение оптимальной производительности и долговечности</p>
+    </div>
+    <div class="col-md-6 text-center">
+      <img src="{% static 'assets/images/banner.png' %}" alt="Billboard" class="img-fluid" style="max-height: 400px;">
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center">
+      <i class="fas fa-phone-alt me-2"></i> +998 97 920 20 21
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
