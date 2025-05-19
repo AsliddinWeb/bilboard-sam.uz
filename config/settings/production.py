@@ -2,10 +2,11 @@ import os
 from .base import *
 
 # Debug
-DEBUG = True
+DEBUG = False
 
 # Security Settings
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 # HTTPS Settings
 SECURE_SSL_REDIRECT = True
