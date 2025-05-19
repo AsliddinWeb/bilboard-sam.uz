@@ -76,6 +76,16 @@
       border-radius: 4px;
       border: 1px solid #ced4da;
     }
+    .reset-btn {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+    }
+    .filter-count {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -114,45 +124,58 @@
 
 <!-- Filter Bar -->
 <div class="container filter-bar">
-  <div class="row g-2">
-    <div class="col-md-2 col-6">
-      <select class="form-select">
-        <option selected>Локация</option>
-        {% for location in locations %}
-          <option value="{{ location }}">{{ location }}</option>
-        {% endfor %}
-      </select>
+  <form id="filterForm" action="/" method="get">
+    <div class="row g-2">
+      <div class="col-md-2 col-6">
+        <select class="form-select" name="location" id="locationFilter">
+          <option value="">Локация</option>
+          {% for location in locations %}
+            <option value="{{ location }}" {% if current_filters.location == location %}selected{% endif %}>{{ location }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <select class="form-select" name="region" id="regionFilter">
+          <option value="">Область</option>
+          {% for region in regions %}
+            <option value="{{ region }}" {% if current_filters.region == region %}selected{% endif %}>{{ region }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <select class="form-select" name="district" id="districtFilter">
+          <option value="">Район</option>
+          {% for district in districts %}
+            <option value="{{ district }}" {% if current_filters.district == district %}selected{% endif %}>{{ district }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <select class="form-select" name="status" id="statusFilter">
+          <option value="">Статус</option>
+          {% for status in statuses %}
+            <option value="{{ status }}" {% if current_filters.status == status %}selected{% endif %}>
+              {% if status == 'occupied' %}Занят{% else %}Свободен{% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4 col-12 d-flex">
+        <input type="text" class="form-control search-input me-2" name="search" id="searchInput" 
+               placeholder="Номер билборда" value="{{ current_filters.search }}">
+        <button type="submit" class="btn search-btn me-1">
+          <i class="fas fa-search"></i>
+        </button>
+        <button type="button" class="btn reset-btn" id="resetFilters">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     </div>
-    <div class="col-md-2 col-6">
-      <select class="form-select">
-        <option selected>Область</option>
-        {% for region in regions %}
-          <option value="{{ region }}">{{ region }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2 col-6">
-      <select class="form-select">
-        <option selected>Район</option>
-        {% for district in districts %}
-          <option value="{{ district }}">{{ district }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2 col-6">
-      <select class="form-select">
-        <option selected>Статус</option>
-        {% for status in statuses %}
-          <option value="{{ status }}">{{ status }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-4 col-12 d-flex">
-      <input type="text" class="form-control search-input me-2" placeholder="Номер точки">
-      <button class="btn search-btn">
-        <i class="fas fa-search"></i>
-      </button>
-    </div>
+  </form>
+  
+  <!-- Filter count indicator -->
+  <div class="filter-count" id="filterCount">
+    <!-- Will be filled by JavaScript -->
   </div>
 </div>
 
@@ -186,23 +209,61 @@
         }
       }
     }, 300);
+    
+    // Initialize filter form submission
+    setupFilters();
+    
+    // Update filter count display
+    updateFilterCount();
   });
   
-  // Initialize form filters with AJAX functionality
-  document.querySelectorAll('.form-select').forEach(select => {
-    select.addEventListener('change', function() {
-      // Here you would implement AJAX filtering based on selected values
-      console.log('Filter changed:', this.value);
-      // Example: fetch('/api/billboards?filter=' + this.value)...
+  // Setup filter form functionality
+  function setupFilters() {
+    // Submit form when any select dropdown changes
+    document.querySelectorAll('.form-select').forEach(select => {
+      select.addEventListener('change', function() {
+        document.getElementById('filterForm').submit();
+      });
     });
-  });
+    
+    // Reset filters button
+    document.getElementById('resetFilters').addEventListener('click', function() {
+      // Clear all form fields
+      document.querySelectorAll('#filterForm select').forEach(select => {
+        select.selectedIndex = 0;
+      });
+      document.getElementById('searchInput').value = '';
+      
+      // Submit the form
+      document.getElementById('filterForm').submit();
+    });
+  }
   
-  // Search button functionality
-  document.querySelector('.search-btn').addEventListener('click', function() {
-    const searchValue = document.querySelector('.search-input').value;
-    console.log('Searching for:', searchValue);
-    // Example: fetch('/api/billboards?search=' + searchValue)...
-  });
+  // Update filter count display
+  function updateFilterCount() {
+    const filterCount = document.getElementById('filterCount');
+    let activeFilters = 0;
+    
+    // Check select filters
+    document.querySelectorAll('#filterForm select').forEach(select => {
+      if (select.value && select.selectedIndex > 0) {
+        activeFilters++;
+      }
+    });
+    
+    // Check search input
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput.value.trim() !== '') {
+      activeFilters++;
+    }
+    
+    // Display count
+    if (activeFilters > 0) {
+      filterCount.textContent = `Активные фильтры: ${activeFilters}`;
+    } else {
+      filterCount.textContent = 'Фильтры не применены';
+    }
+  }
 </script>
 </body>
 </html>
