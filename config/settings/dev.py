@@ -3,6 +3,9 @@ from .base import *
 # Debug
 DEBUG = True
 
+# Set development specific allowed hosts
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 # Database
 DATABASES = {
     'default': {
