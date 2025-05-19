@@ -2,7 +2,7 @@ import os
 from .base import *
 
 # Debug
-DEBUG = False
+DEBUG = True
 
 # Security Settings
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
