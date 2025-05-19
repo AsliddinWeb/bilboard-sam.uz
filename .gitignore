@@ -18,6 +18,7 @@ db.sqlite3
 media/
 staticfiles/         # collectstatic natijalari
 local_settings.py
+logs/
 
 # Environments
 .env
